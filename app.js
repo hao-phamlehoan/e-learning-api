@@ -1,60 +1,51 @@
 const express = require('express');
+const cors = require('cors');
+const morgan = require('morgan');
 const oracledb = require('oracledb');
 const logger = require('morgan');
 const bodyParser = require('body-parser')
 
 require('dotenv').config()
 
-const usersRouter = require('./Routes/users.routes');
-const adminRouter = require('./Routes/admin.routes');
+const PORT = process.env.PORT || 4000;
+
 const checkAuth = require('./src/Middleware/checkAuth.middleware')
 const { encrypt } = require('./src/utils/encdec');
 
 const app = express();
+app.use(cors());
+app.use(morgan('combined'));
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+	res.send("ISS");
+})
 
-
-// const dbConfig = {
-// 	user: 'your_username',
-// 	password: 'your_password',
-// 	connectString: 'your_connect_string', // e.g., 'localhost:1521/your_service_name'
-// };
-
-// // Establish a connection to the Oracle Database
-// async function connectToDatabase() {
-// 	try {
-// 		await oracledb.createPool(dbConfig);
-// 		console.log('Connected to Oracle Database');
-// 	} catch (err) {
-// 		console.error('Error connecting to Oracle Database:', err);
-// 	}
-// }
-
-// // Middleware to establish the Oracle DB connection
-// app.use((req, res, next) => {
-// 	if (!oracledb.getPool()) {
-// 		connectToDatabase();
-// 	}
-// 	next();
-// });
 
 // Route for user login
 app.post('/login', async (req, res) => {
-	const { username, password, service } = req.body;
-	const userDbConfig = { 
+	const { user, password, service } = req.body;
+	let userDbConfig = {
 		connectString: `localhost:1521/${service}`,
-		user: username, 
-		password: password 
+		user: user,
+		password: password,
 	};
 
 	try {
 		const connection = await oracledb.getConnection(userDbConfig);
+		const result = await connection.execute('SELECT * FROM all_users');
+
 		// If the connection is successful, the user's credentials are valid
-		res.status(200).json({ 
+		userDbConfig = {
+			...userDbConfig,
+			service: service,
+			key: process.env.KEY,
+			expire: Date.now() + 24 * 3600 * 1000
+		}
+		res.status(200).json({
 			message: 'Login successful',
 			token: encrypt(JSON.stringify(userDbConfig), process.env.SECRET)
 		});
@@ -66,16 +57,16 @@ app.post('/login', async (req, res) => {
 
 app.use(checkAuth);
 
-app.get('/get_data', async (req, res) => {
-	const { username, password, service } = req.header;
-	const userDbConfig = { 
+app.get('/get-data', async (req, res) => {
+	const { user, password, service } = req.body;
+	const userDbConfig = {
 		connectString: `localhost:1521/${service}`,
-		user: username, 
-		password: password 
+		user: user,
+		password: password,
 	};
 	try {
 		const connection = await oracledb.getConnection(userDbConfig);
-		const result = await connection.execute('SELECT * FROM your_table');
+		const result = await connection.execute('SELECT * FROM all_users');
 		res.json(result.rows);
 	} catch (err) {
 		console.error('Error executing query:', err);
@@ -83,8 +74,8 @@ app.get('/get_data', async (req, res) => {
 	}
 });
 
-app.use('/users', usersRouter);
-app.use('/admin', adminRouter)
+// app.use('/users', usersRouter);
+// app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -100,4 +91,6 @@ app.use(function (err, req, res, next) {
 	})
 });
 
-module.exports = app;
+app.listen(PORT, () => {
+	console.log(`Server is running on port http://localhost:${PORT}`);
+});

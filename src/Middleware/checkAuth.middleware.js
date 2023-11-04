@@ -1,17 +1,23 @@
-const { decrypt } = require("../utils/encdec");
+const { decrypt } = require('../utils/encdec');
 
 module.exports = function (req, res, next) {
-  const token = req.header("token");
-  if (!token) return res.status(400).send("Access Denied!, no token entered");
+  const token = req.header('token');
+  if (!token) return res.status(400).json({ error: 'Access Denied!, no token entered' });
 
   try {
     const userDbConfig  = JSON.parse(decrypt(token, process.env.SECRET));
+    if (userDbConfig.key !== process.env.key) {
+      return res.status(401).json({ error: 'auth failed, check auth-token' });
+    }
+    if (userDbConfig.expire < Date.now()) {
+      return res.status(402).json({ error: 'token expired'})
+    }
     req.body = {
       ...req.body,
       ...userDbConfig
     };
     next();
   } catch (err) {
-    res.status(400).send({ error: "auth failed, check auth-token222" });
+    res.status(401).json({ error: 'auth failed, check auth-token' });
   }
 };
