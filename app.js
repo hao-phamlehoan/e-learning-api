@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const morgan = require('morgan');
-const oracledb = require('oracledb');
 const logger = require('morgan');
+const oracledb = require('oracledb');
 const bodyParser = require('body-parser')
+const route = require('./src/Routes/index.routes')
 
 require('dotenv').config()
 
@@ -14,7 +14,6 @@ const { encrypt } = require('./src/utils/encdec');
 
 const app = express();
 app.use(cors());
-app.use(morgan('combined'));
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -23,7 +22,6 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
 	res.send("ISS");
 })
-
 
 // Route for user login
 app.post('/login', async (req, res) => {
@@ -57,6 +55,8 @@ app.post('/login', async (req, res) => {
 
 app.use(checkAuth);
 
+app.use(route);
+
 app.get('/get-data', async (req, res) => {
 	const { user, password, service } = req.body;
 	const userDbConfig = {
@@ -74,8 +74,6 @@ app.get('/get-data', async (req, res) => {
 	}
 });
 
-// app.use('/users', usersRouter);
-// app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
