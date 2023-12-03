@@ -10,7 +10,7 @@ router.delete('/', learnControllers.deleteLearn);
 router.get('/subject', learnControllers.getAllSubject);
 router.get('/subject/:id', learnControllers.getSubject);
 router.post('/subject', learnControllers.createSubject);
-router.patch('/subject', learnControllers.updateSubject);
-router.delete('/subject', learnControllers.deleteSubject);
+router.patch('/subject/:id', learnControllers.updateSubject);
+router.delete('/subject/:id', learnControllers.deleteSubject);
 
 module.exports = router

@@ -1,15 +1,17 @@
 const oracledb = require('oracledb');
+oracledb.autoCommit = true;
 
 class UserModel {
-    async getUser(body) {
-        const { user, password, service } = body;
+    async getUser(headers) {
+        const { user, password, service } = headers;
         const userDbConfig = {
             connectString: `localhost:1521/${service}`,
             user: user,
             password: password,
         };
         const connection = await oracledb.getConnection(userDbConfig);
-        const result = await connection.execute('SELECT * FROM user_');
+        const result = await connection.execute('SELECT * FROM lab_user');
+        connection.close();
         return result.rows;
     }
 

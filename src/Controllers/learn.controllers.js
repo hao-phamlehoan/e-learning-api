@@ -16,7 +16,7 @@ class LearnController {
 
     async getAllSubject(req, res) {
         try {
-            const subs = await learnModel.getAllSubject(req.body);
+            const subs = await learnModel.getAllSubject(req.headers);
             res.status(200).json({
                 result: 'success',
                 data: subs
@@ -31,9 +31,9 @@ class LearnController {
 
     }
     async getSubject(req, res) {
-        const id = req.param.id;
+        const id = req.params.id;
         try {
-            const subs = await learnModel.getSubject(req.body, id);
+            const subs = await learnModel.getSubject(req.headers, id);
             res.status(200).json({
                 result: 'success',
                 data: subs
@@ -48,7 +48,7 @@ class LearnController {
     }
     async createSubject(req, res) {
         try {
-            const subs = await learnModel.createSubject(req.body);
+            const subs = await learnModel.createSubject(req.headers, req.body);
             res.status(200).json({
                 result: 'success',
             });
@@ -60,9 +60,9 @@ class LearnController {
         }
     }
     async updateSubject(req, res) {
-        const id = req.param.id;
+        const id = req.params.id;
         try {
-            const subs = await learnModel.updateSubject(req.body, id);
+            const subs = await learnModel.updateSubject(req.headers, id, req.body);
             res.status(200).json({
                 result: 'success',
             });
@@ -74,7 +74,18 @@ class LearnController {
         }
     }
     async deleteSubject(req, res) {
-        
+        const id = req.params.id;
+        try {
+            const subs = await learnModel.deleteSubject(req.headers, id);
+            res.status(200).json({
+                result: 'success',
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                result: 'fail',
+            })
+        }
     }
 }
 module.exports = new LearnController;

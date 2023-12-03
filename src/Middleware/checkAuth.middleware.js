@@ -12,8 +12,7 @@ module.exports = function (req, res, next) {
     if (userDbConfig.expire < Date.now()) {
       return res.status(402).json({ error: 'token expired'})
     }
-    req.body = {
-      ...req.body,
+    req.headers = {
       ...userDbConfig
     };
     next();

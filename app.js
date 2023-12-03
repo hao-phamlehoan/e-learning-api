@@ -34,7 +34,6 @@ app.post('/login', async (req, res) => {
 
 	try {
 		const connection = await oracledb.getConnection(userDbConfig);
-		const result = await connection.execute('SELECT * FROM all_users');
 
 		// If the connection is successful, the user's credentials are valid
 		userDbConfig = {
@@ -58,7 +57,7 @@ app.use(checkAuth);
 app.use(route);
 
 app.get('/get-data', async (req, res) => {
-	const { user, password, service } = req.body;
+	const { user, password, service } = req.headers;
 	const userDbConfig = {
 		connectString: `localhost:1521/${service}`,
 		user: user,

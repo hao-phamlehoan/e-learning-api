@@ -1,4 +1,5 @@
 const oracledb = require('oracledb');
+oracledb.autoCommit = true;
 
 class ClassModel {
     async getClass() {

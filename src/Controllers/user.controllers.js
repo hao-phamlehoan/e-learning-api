@@ -3,7 +3,7 @@ const userModel = require('../Models/user.models');
 class UserControllers {
     async getUser(req, res) {
         try {
-            const users = await userModel.getUser(req.body);
+            const users = await userModel.getUser(req.headers);
             res.status(200).json({
                 result: 'success',
                 data: users
