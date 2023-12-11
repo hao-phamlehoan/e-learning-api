@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const logger = require('morgan');
 const oracledb = require('oracledb');
+oracledb.autoCommit = true;
+oracledb.outFormat = oracledb.OBJECT;
 const bodyParser = require('body-parser')
 const route = require('./src/Routes/index.routes')
 const service = 'unipdb';
@@ -59,8 +61,9 @@ app.use(checkAuth);
 
 app.use('/api', route);
 
-app.get('/get-data', async (req, res) => {
+app.post('/data', async (req, res) => {
 	const { user, password } = req.headers;
+	const { query } = req.body;
 	const userDbConfig = {
 		connectString: `localhost:1521/${service}`,
 		user: user,
@@ -68,11 +71,11 @@ app.get('/get-data', async (req, res) => {
 	};
 	try {
 		const connection = await oracledb.getConnection(userDbConfig);
-		const result = await connection.execute('SELECT DISTINCT * FROM all_users');
-		res.json(result.rows);
+		const result = await connection.execute(query);
+		res.status(200).json(result.rows);
 	} catch (err) {
 		console.error('Error executing query:', err);
-		res.status(500).json({ error: 'An error occurred' });
+		res.status(400).json({ error: 'An error occurred' });
 	}
 });
 
