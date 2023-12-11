@@ -32,14 +32,14 @@ app.get('/', (req, res) => {
 app.post('/login', async (req, res) => {
 	const { user, password } = req.body;
 	let userDbConfig = {
-		connectString: `localhost:1521/${service}`,
+		connectString: `tcp://0.tcp.ap.ngrok.io:16028/${service}`,
 		user: user,
 		password: password,
 	};
 
 	try {
 		const connection = await oracledb.getConnection(userDbConfig);
-		const result = await connection.execute('SELECT DISTINCT * FROM LAB_USER WHERE USER_NAME = :1', [user]);
+		const result = await connection.execute(`SELECT DISTINCT * FROM LAB_USER WHERE USER_NAME = :1`, [user]);
 		// If the connection is successful, the user's credentials are valid
 		userDbConfig = {
 			...userDbConfig,
@@ -49,7 +49,7 @@ app.post('/login', async (req, res) => {
 		res.status(200).json({
 			message: 'Login successful',
 			token: encrypt(JSON.stringify(userDbConfig), process.env.SECRET),
-			user_id: result.rows.ID
+			user_id: result.rows[0].ID
 		});
 	} catch (err) {
 		console.error('Error logging in user:', err);

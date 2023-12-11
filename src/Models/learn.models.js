@@ -125,7 +125,6 @@ class LearnModel {
         return result.rows;
     }
     async updateSubject(headers, id, body) {
-        console.log(typeof id)
         const { user, password } = headers;
         const userDbConfig = {
             connectString: `localhost:1521/${service}`,
