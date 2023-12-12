@@ -4,33 +4,66 @@ oracledb.outFormat = oracledb.OBJECT;
 const service = 'unipdb';
 
 class DeptModel {
-    async getAllDept(headers, body) {
-        const { user, password } = headers;
-        const userDbConfig = {
-            connectString: `localhost:1521/${service}`,
-            user: user,
-            password: password,
-        };
-        const connection = await oracledb.getConnection(userDbConfig);
-        const result = await connection.execute(`SELECT DISTINCT  c.id, c.name, c.student_number, c.semester, c.is_active, u.name t_name, s.name s_name \
-        FROM lab_class c, lab_teach t, lab_user u, lab_subject s, lab_learn l \
-        where c.id = t.class_id and t.user_id = u.id and l.class_id = c.id and l.subject_id = s.id `);
-        connection.close();
-        return result.rows;
-    }
-    async getDept(headers, body, id) {
-        
-    }
-    async createDept(headers, body) {
-
-    }
-    async updateDept(headers, body, id) {
-
-    }
-    async deleteDept(headers, body) {
-
-    }
-    
+  async getAllDept(headers, body) {
+    const { user, password } = headers;
+    const userDbConfig = {
+      connectString: `localhost:1521/${service}`,
+      user: user,
+      password: password,
+    };
+    const connection = await oracledb.getConnection(userDbConfig);
+    const result =
+      await connection.execute(`SELECT * FROM lab_dept`);
+    connection.close();
+    return result.rows;
+  }
+  async createDept(headers, body) {
+    const { user, password } = headers;
+    const { location, name, manager_id } = body;
+    const userDbConfig = {
+      connectString: `localhost:1521/${service}`,
+      user: user,
+      password: password,
+    };
+    const connection = await oracledb.getConnection(userDbConfig);
+    const result = await connection.execute(
+      `INSERT INTO lab_dept (location,name,manager_id) VALUES (:1,:2,:3)`,
+      [location, name, manager_id]
+    );
+    connection.close();
+    return result.rows;
+  }
+  async updateDept(headers, id, body) {
+    const { user, password } = headers;
+    const { location, name, manager_id } = body;
+    const userDbConfig = {
+      connectString: `localhost:1521/${service}`,
+      user: user,
+      password: password,
+    };
+    const connection = await oracledb.getConnection(userDbConfig);
+    const result = await connection.execute(
+        `UPDATE lab_dept SET location = :1, name = :2, manager_id = :3 WHERE id = :4`,
+        [location, name, manager_id, id]
+    );
+    connection.close();
+    return result.rows;
+  }
+  async deleteDept(headers, id, body) {
+    const { user, password } = headers;
+    const userDbConfig = {
+      connectString: `localhost:1521/${service}`,
+      user: user,
+      password: password,
+    };
+    const connection = await oracledb.getConnection(userDbConfig);
+    const result = await connection.execute(
+      `DELETE lab_dept WHERE id = :1`,
+      [id]
+    );
+    connection.close();
+    return result.rows;
+  }
 }
 
-module.exports = new DeptModel;
+module.exports = new DeptModel();

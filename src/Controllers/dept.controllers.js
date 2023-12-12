@@ -16,22 +16,6 @@ class DeptController {
             })
         }
     }
-    async getDept(req, res) {
-        const id = req.params.id;
-        try {
-            const rows = await deptModel.getDept(req.headers, id);
-            res.status(200).json({
-                result: 'success',
-                data: rows
-            });
-        } catch (error) {
-            console.log(error);
-            res.status(400).json({
-                result: 'fail',
-                data: null
-            })
-        }
-    }
     async createDept(req, res) {
         try {
             const rows = await deptModel.createDept(req.headers, req.body);
@@ -64,7 +48,20 @@ class DeptController {
         }
     }
     async deleteDept(req, res) {
-
+        const id = req.params.id;
+        try {
+            const rows = await deptModel.deleteDept(req.headers, id, req.body);
+            res.status(200).json({
+                result: 'success',
+                data: rows
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                result: 'fail',
+                data: null
+            })
+        }
     }
 
 }
