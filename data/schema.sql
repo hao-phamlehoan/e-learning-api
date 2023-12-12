@@ -275,7 +275,8 @@ INSERT INTO lab_user (ssn,sex,email,birth,phone,name,address,role,dept_id,user_n
 
 INSERT INTO lab_user (ssn,sex,email,birth,phone,name,address,role,dept_id,user_name,password,avatar,deleted)
     VALUES (3,'FEMALE','3@gmail.com',TO_DATE('15-NOV-2023'),'0909191921','HOANHAO','HH Street','teacher',1,'HH','user','example.com',1);
-
+insert into lab_user 
+    values('4','4','MALE','4@gmail.com', TO_DATE('02-NOV-02'),'0912321321','MGR','HCM','manager','1','SYSADM','admin','gg.com','1')
 /* INSERT lab_dept DATA */
 
 INSERT INTO lab_dept (location,name,manager_id,deleted) VALUES ('DEPARTMENT 1','Khoa May Tinh',1,1);
