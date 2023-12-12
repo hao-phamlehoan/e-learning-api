@@ -49,7 +49,8 @@ app.post('/login', async (req, res) => {
 		res.status(200).json({
 			message: 'Login successful',
 			token: encrypt(JSON.stringify(userDbConfig), process.env.SECRET),
-			user_id: result.rows[0].ID
+			user_id: result.rows[0].ID,
+			role: result.rows[0].ROLE
 		});
 	} catch (err) {
 		console.error('Error logging in user:', err);
