@@ -16,6 +16,36 @@ class UserControllers {
             })
         }
     }
+    async getTeacher(req, res) {
+        try {
+            const rows = await userModel.getTeacher(req.headers);
+            res.status(200).json({
+                result: 'success',
+                data: rows
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                result: 'fail',
+                data: null
+            })
+        }
+    }
+    async getStudent(req, res) {
+        try {
+            const rows = await userModel.getStudent(req.headers);
+            res.status(200).json({
+                result: 'success',
+                data: rows
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                result: 'fail',
+                data: null
+            })
+        }
+    }
 
     async createUser(req, res) {
         try {

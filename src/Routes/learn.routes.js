@@ -12,8 +12,8 @@ router.delete('/', learnControllers.deleteLearn);
 
 // Subject
 router.get('/subject', learnControllers.getAllSubject);
-router.get('/subject/:id', learnControllers.getSubject);
 router.get('/subject/student/:id', learnControllers.getSubjectByStudent);
+router.get('/subject/:id', learnControllers.getSubject);
 router.post('/subject', learnControllers.createSubject);
 router.patch('/subject/:id', learnControllers.updateSubject);
 router.delete('/subject/:id', learnControllers.deleteSubject);

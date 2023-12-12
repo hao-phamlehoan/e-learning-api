@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 app.post('/login', async (req, res) => {
 	const { user, password } = req.body;
 	let userDbConfig = {
-		connectString: `tcp://0.tcp.ap.ngrok.io:16028/${service}`,
+		connectString: `localhost:1521/${service}`,
 		user: user,
 		password: password,
 	};
