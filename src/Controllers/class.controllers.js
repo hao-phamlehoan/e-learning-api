@@ -80,6 +80,21 @@ class classController {
             })
         }
     }
+    async activeScore(req, res) {
+        try {
+            const rows = await classModel.activeScore(req.headers, req.body);
+            res.status(200).json({
+                result: 'success',
+                data: rows
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                result: 'fail',
+                data: null
+            })
+        }
+    }
     async createClass(req, res) {
 
     }
@@ -123,6 +138,22 @@ class classController {
             })
         }
     }
+    async getAllNotifi(req, res) {
+        const id = req.params.id;
+        try {
+            const rows = await classModel.getAllNotifi(req.headers);
+            res.status(200).json({
+                result: 'success',
+                data: rows
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                result: 'fail',
+                data: null
+            })
+        }
+    }
     async getNotifi(req, res) {
         const id = req.params.id;
         try {
@@ -141,6 +172,7 @@ class classController {
     }
     async createNotifi(req, res) {
         try {
+            console.log(req.body)   
             const rows = await classModel.createNotifi(req.headers, req.body);
             res.status(200).json({
                 result: 'success',
@@ -207,6 +239,21 @@ class classController {
     async createDocumnet(req, res) {
         try {
             const rows = await classModel.createDocumnet(req.headers, req.body);
+            res.status(200).json({
+                result: 'success',
+                data: rows
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                result: 'fail',
+                data: null
+            })
+        }
+    }
+    async updateDocumnet(req, res) {
+        try {
+            const rows = await classModel.updateDocument(req.headers, req.id, req.body);
             res.status(200).json({
                 result: 'success',
                 data: rows

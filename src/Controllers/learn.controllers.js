@@ -64,6 +64,21 @@ class LearnController {
             })
         }
     }
+    async activeScore(req, res) {
+        try {
+            const rows = await learnModel.activeScore(req.headers, req.body);
+            res.status(200).json({
+                result: 'success',
+                data: rows
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(400).json({
+                result: 'fail',
+                data: null
+            })
+        }
+    }
     async deleteLearn(req, res) {
 
     }

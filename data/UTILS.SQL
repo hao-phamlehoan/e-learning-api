@@ -45,7 +45,7 @@ CONN SYSADM/admin@localhost:1521/unipdb;
 BEGIN
     sa_user_admin.set_levels
         (policy_name => 'ACCESS_NOTIFICATION',
-        user_name => 'ABC',
+        user_name => 'A',
         max_level => 'P',
         min_level => 'P',
         def_level => 'P',

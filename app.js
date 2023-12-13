@@ -39,7 +39,9 @@ app.post('/login', async (req, res) => {
 
 	try {
 		const connection = await oracledb.getConnection(userDbConfig);
-		const result = await connection.execute(`SELECT DISTINCT * FROM LAB_USER WHERE USER_NAME = :1`, [user]);
+		const result = await connection.execute(`SELECT DISTINCT * FROM sysadm.lab_USER WHERE USER_NAME = :1`, [user]);
+		const deptMgr = await connection.execute(`SELECT DISTINCT * FROM sysadm.lab_USER U, sysadm.lab_DEPT D 
+		WHERE U.USER_NAME = :1 and U.id = d.manager_id`, [user]);
 		// If the connection is successful, the user's credentials are valid
 		userDbConfig = {
 			...userDbConfig,
@@ -50,7 +52,8 @@ app.post('/login', async (req, res) => {
 			message: 'Login successful',
 			token: encrypt(JSON.stringify(userDbConfig), process.env.SECRET),
 			user_id: result.rows[0].ID,
-			role: result.rows[0].ROLE
+			role: result.rows[0].ROLE,
+			deptMgr: deptMgr.rows.length > 0
 		});
 	} catch (err) {
 		console.error('Error logging in user:', err);

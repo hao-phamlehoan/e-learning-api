@@ -13,7 +13,7 @@ class DeptModel {
     };
     const connection = await oracledb.getConnection(userDbConfig);
     const result =
-      await connection.execute(`SELECT * FROM lab_dept`);
+      await connection.execute(`SELECT * FROM sysadm.lab_dept`);
     connection.close();
     return result.rows;
   }
@@ -27,7 +27,7 @@ class DeptModel {
     };
     const connection = await oracledb.getConnection(userDbConfig);
     const result = await connection.execute(
-      `INSERT INTO lab_dept (location,name,manager_id) VALUES (:1,:2,:3)`,
+      `INSERT INTO sysadm.lab_dept (location,name,manager_id) VALUES (:1,:2,:3)`,
       [location, name, manager_id]
     );
     connection.close();
@@ -36,6 +36,7 @@ class DeptModel {
   async updateDept(headers, id, body) {
     const { user, password } = headers;
     const { location, name, manager_id } = body;
+    console.log(location, name, manager_id)
     const userDbConfig = {
       connectString: `localhost:1521/${service}`,
       user: user,
@@ -43,7 +44,7 @@ class DeptModel {
     };
     const connection = await oracledb.getConnection(userDbConfig);
     const result = await connection.execute(
-        `UPDATE lab_dept SET location = :1, name = :2, manager_id = :3 WHERE id = :4`,
+        `UPDATE sysadm.lab_dept SET location = :1, name = :2, manager_id = :3 WHERE id = :4`,
         [location, name, manager_id, id]
     );
     connection.close();
@@ -58,7 +59,7 @@ class DeptModel {
     };
     const connection = await oracledb.getConnection(userDbConfig);
     const result = await connection.execute(
-      `DELETE lab_dept WHERE id = :1`,
+      `DELETE sysadm.lab_dept WHERE id = :1`,
       [id]
     );
     connection.close();
